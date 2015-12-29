@@ -12,12 +12,14 @@ class GameScene: SKScene {
     
     
     
-    let Circle = SKShapeNode(circleOfRadius: 100 ) // Size of Circle
+    let Circle = SKShapeNode(circleOfRadius: 60 )
+    let myLabel = SKLabelNode(fontNamed:"Chalkduster")
+    var pressCount=0;
+    
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!"
+        myLabel.text = String (pressCount);
         myLabel.fontSize = 45
         myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
         self.addChild(myLabel)
@@ -27,36 +29,38 @@ class GameScene: SKScene {
          oneLittleCircle();
     }
     
+    //let scaler=SKAction.sequence([scaleUp,scaleDown]);
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-       /* Called when a touch begins */
-        
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            
-            //let sprite = SKSpriteNode(imageNamed:"Spaceship")
-            //sprite.xScale = 0.5
-            //sprite.yScale = 0.5
-            //sprite.position = location
-           // let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-            //sprite.runAction(SKAction.repeatActionForever(action))
-            
+        let touch=touches.first! as UITouch;
+        let location = touch.locationInNode(self)
             let scaleUp=SKAction.scaleTo(1.1,duration: 0.1);
-            let scaleDown=SKAction.scaleTo(1.0,duration: 0.1);
-            let scaler=SKAction.sequence([scaleUp,scaleDown]);
-            
             if self.Circle.containsPoint(location)
             {
-                Circle.fillColor = SKColor.redColor();
-                Circle.runAction(scaler);
-                
+                pressCount++;
+                myLabel.text = String (pressCount);
+                Circle.runAction(scaleUp);
                 print("Circle Pressed");
             }
-            
-            
-            
-           
-        }
     }
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
+    }
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let touch=touches.first! as UITouch;
+        let location = touch.locationInNode(self)
+        let scaleDown=SKAction.scaleTo(1.0,duration: 0.1);
+        if self.Circle.containsPoint(location)
+        {
+            Circle.runAction(scaleDown);
+            print("Circle Pressed");
+        }
+        
+    }
+    
+
+    
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
@@ -65,10 +69,10 @@ class GameScene: SKScene {
     
     func oneLittleCircle(){
         
-        Circle.position = CGPointMake(frame.midX, 100+20)  //Middle of Screen
+        Circle.position = CGPointMake(frame.midX, 60+20)  //Middle of Screen
         Circle.strokeColor = SKColor.blackColor()
         Circle.glowWidth = 1.0
-        Circle.fillColor = SKColor.orangeColor()
+        Circle.fillColor = SKColor.whiteColor()
         self.addChild(Circle)
     }
 }
